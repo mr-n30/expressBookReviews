@@ -28,13 +28,20 @@ public_users.get('/', function (req, res) {
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn', function (req, res) {
   if (typeof req.params.isbn !== 'undefined') return res.status(200).json(books[req.params.isbn])
-  return res.status(404).json({message: "Book not found with that ISBN"})
+  return res.status(404).json({ message: "Book not found with that ISBN" })
 });
 
 // Get book details based on author
 public_users.get('/author/:author', function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  if (typeof req.params !== 'undefined') {
+    for (let key in books) {
+      const item = books[key]
+      const author = item["author"].toLowerCase().split(' ')
+      if (author.some(item => req.params.author.toLowerCase().split(' ').includes(item)))
+        return res.status(200).json(item)
+    }
+    return res.status(200).json()
+  }
 });
 
 // Get all books based on title
