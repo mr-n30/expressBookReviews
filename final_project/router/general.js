@@ -46,19 +46,31 @@ public_users.get('/author/:author', function (req, res) {
 
 // Get all books based on title
 public_users.get('/title/:title', function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  if (typeof req.params !== 'undefined') {
+    const arr = []
+    for (let key in books) {
+      const regex = new RegExp(req.params.title, 'ig');
+      if (regex.test(books[key].title)) {
+        arr.push(books[key])
+      }
+    }
+
+    if (arr.length < 1) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    return res.status(200).json({books: arr})
+  }
 });
 
 //  Get book review
 public_users.get('/review/:isbn', function (req, res) {
   if (typeof req.params !== 'undefined') {
     const isbn = books[req.params.isbn]
-
     if (isbn) {
-      return res.status(200).json({reviews: isbn.reviews})
+      return res.status(200).json({ reviews: isbn.reviews })
     } else {
-      return res.status(404).json({message: "Not found"})
+      return res.status(404).json({ message: "Not found" })
     }
   }
 });
