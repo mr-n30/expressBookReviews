@@ -33,10 +33,17 @@ public_users.get('/isbn/:isbn',function (req, res) {
   return res.status(404).json({message: "Not found!"})
  });
   
+// TODO:
+// add a way to search for author based off of 1 word and case insensitive
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  for (let key in books) {
+    if(books[key]["author"] === req.params.author) {
+      return res.status(200).json({[key]: books[key]})
+    }
+  }
+
+  return res.status(404).json({message: "A book with that author doesn't exist!"})
 });
 
 // Get all books based on title
