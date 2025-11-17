@@ -49,14 +49,22 @@ public_users.get('/author/:author',function (req, res) {
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  for (let key in books) {
+    const safePattern = RegExp.escape(req.params.title)
+    const regex = new RegExp(safePattern, "i")
+    if (regex.test(books[key]["title"])) {
+      res.status(200).json({[key]: books[key]})
+    }
+  }
+  return res.status(404).json({message: "A book with that title doesn't exist!"});
 });
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const isbn = req.params.isbn
+  if(books.hasOwnProperty(isbn))
+    return res.status(200).json({[isbn]: books[isbn]})
+  return res.status(404).json({message: "A book with that ISBN doesn't exist!"});
 });
 
 module.exports.general = public_users;
