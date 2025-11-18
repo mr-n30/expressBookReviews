@@ -41,8 +41,23 @@ regd_users.get("/auth/home", (req, res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const auth = req.session.authorization
+  const isbn = req.params.isbn
+
+  if (!auth || !auth.accessToken) {
+    return res.status(401).json({message: "You are not logged in!"})
+  } 
+
+  if (books.hasOwnProperty(isbn)) {
+    books[isbn]["reviews"] = {
+      ...books[isbn]["reviews"],
+      [auth.username]: req.body.review
+    }
+
+    return res.status(201).json({message: "Review created!"})
+  }
+
+  return res.status(400).json({ message: "An error occurred. Unable to create review!" });
 });
 
 module.exports.authenticated = regd_users;
