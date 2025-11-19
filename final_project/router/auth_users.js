@@ -39,7 +39,7 @@ regd_users.get("/auth/home", (req, res) => {
   return res.send("You are logged in!")
 })
 
-// Add a book review
+// Add / Edit a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   const auth = req.session.authorization
   const isbn = req.params.isbn
@@ -48,6 +48,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     return res.status(401).json({message: "You are not logged in!"})
   } 
 
+  // Creates / Edits review 
   if (books.hasOwnProperty(isbn)) {
     books[isbn]["reviews"] = {
       ...books[isbn]["reviews"],
