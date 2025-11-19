@@ -60,6 +60,24 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   return res.status(400).json({ message: "An error occurred. Unable to create review!" });
 });
 
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+  const auth = req.session.authorization
+  const token = auth.accessToken
+  const username = auth.username
+  const isbn = req.params.isbn
+
+  if ([auth, token, username].some(elem => typeof elem === 'undefined')) {
+    return res.status(401).json({"message": "Missing required param!"})
+  }
+
+  if (books[isbn] && books[isbn]["reviews"].hasOwnProperty(username)) {
+    delete books[isbn]["reviews"][username]
+    return res.status(200).json(books[isbn])
+  }
+
+  return res.status(404).json({"message": "Book or review not found!"})
+})
+
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;

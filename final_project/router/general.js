@@ -53,7 +53,7 @@ public_users.get('/title/:title',function (req, res) {
     const safePattern = RegExp.escape(req.params.title)
     const regex = new RegExp(safePattern, "i")
     if (regex.test(books[key]["title"])) {
-      res.status(200).json({[key]: books[key]})
+      return res.status(200).json({[key]: books[key]})
     }
   }
   return res.status(404).json({message: "A book with that title doesn't exist!"});
