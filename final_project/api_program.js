@@ -13,14 +13,9 @@ async function getAllBooks() {
 getAllBooks()
 
 async function searchByIsbn() {
-    try {
-        const res = await axios.get('http://localhost:1337/isbn/1')
-        console.log(res.data)
-    }
-
-    catch(e) {
-        console.log(`An error occurred=>${e}`)
-    }
+    fetch('http://localhost:1337/isbn/1')
+    .then(res => console.log(res.data))
+    .catch(err => console.log(err))
 }
 
 searchByIsbn()

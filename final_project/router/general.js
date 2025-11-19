@@ -49,13 +49,20 @@ public_users.get('/author/:author',function (req, res) {
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
+  const matches = []
   for (let key in books) {
     const safePattern = RegExp.escape(req.params.title)
     const regex = new RegExp(safePattern, "i")
-    if (regex.test(books[key]["title"])) {
-      return res.status(200).json({[key]: books[key]})
+    const matched = regex.test(books[key]["title"])
+    if (matched) {
+      matches.push(books[key])
     }
   }
+
+  if (matches.length > 0) {
+    return res.status(200).json({"books": matches})
+  }
+
   return res.status(404).json({message: "A book with that title doesn't exist!"});
 });
 
